@@ -1,3 +1,8 @@
+#!/usr/bin/env python
+# -*- coding: UTF-8 -*-
+# cmdUtils made by Simon Poulet-Alligand
+# Version de développement impliquand fonction non-utilisable
+
 #>>-----------Import----------------<<
 
 import os
@@ -5,7 +10,6 @@ import json
 import sys
 import cmd
 import datetime
-import I10n
 
 #>>-----------Constants-------------<<
 
@@ -15,6 +19,14 @@ WARM = 1
 ERROR = 2
 CRITICAL = 3
 #debug = False
+RESET_COLOR = "\033[m"
+DEFAULT_COLOR = "\033[38;5;97m"
+DEBUG_COLOR = "\033[38;5;240m"
+FATAL_COLOR = "\033[38;5;160m"
+ERROR_COLOR = "\033[38;5;166m"
+WARN_COLOR = "\033[38;5;11m"
+INFO_COLOR = "\033[38;5;248m"
+
 
 #>>-----------Exemple---------------<<
 cmd_list_exemple = {
@@ -23,7 +35,7 @@ cmd_list_exemple = {
 #	"HELP"	: [help_func,1,"usage"]
 # "FUNCTIONNAME" can be anything that isn't  \" or \ and equivalent
 # argumentQuantity is a number greater or equal to -1, it's the number of argument an command require (-1 mean no limitation)
-# if argumentQuantity >= -1, argumentMaxQuantity should be wrote, it represent the max quantity an command require (0 or less mean no limitation)
+# if argumentQuantity >= -1, argumentMaxQuantity should be written, it represent the max quantity an command require (0 or less mean no limitation)
 # usage is always the las parameter it's a str who detail function arg and use
 }
 
@@ -38,12 +50,12 @@ def validate(output):
 	answer = input(' [Y/n]\n')
 	return answer == 'Y' or answer == 'y' or answer == 'o' or answer == 'O' or answer == ""
 
-def log(level, content, source,pend='\n'):
+def log(level, content, source,color=RESET_COLOR,pend='\n'):
 	now = datetime.datetime.now()
 	hour = '{:02d}'.format(now.hour)
 	minute = '{:02d}'.format(now.minute)
 	second = '{:02d}'.format(now.second)
-	print(f'\r[{hour}:{minute}:{second}][{str(source)}/{level}] {str(content)}',end=pend)
+	print(f'\r{color}[{hour}:{minute}:{second}][{str(source)}/{level}] {str(content)}{RESET_COLOR}',end=pend)
 
 def getline():
 	cmd_input = input("\n$ ").strip()
@@ -77,44 +89,25 @@ def getline():
 	output += [temp]
 	return output
 
-def debug(message):
-	log("DEBUG", message, "MAIN")
+def debug(message, source="MAIN"):
+	log("DEBUG", message, source, color=DEBUG_COLOR)
 
-def info(message):
-	log("INFO", message, "MAIN")
+def info(message, source="MAIN"):
+	log("INFO", message, source, color=INFO_COLOR)
 
-def warn(message):
-	log("WARN", message, "MAIN")
+def warn(message, source="MAIN"):
+	log("WARN", message, source, color=WARN_COLOR)
 
-def error(message):
-	log("ERROR", message, "MAIN")
+def error(message, source="MAIN"):
+	log("ERROR", message, source, color=ERROR_COLOR)
 
-def fatal(message):
-	log("FATAL", message, "MAIN")
-
-#Petite triche pour bloquer les input
-class InputDisable:
-
-	def start(self):
-		self.on = True
-
-	def stop(self):
-		self.on = False
-
-	def __init__(self):
-		self.on = False
-		if sys.platform.startswith('win') :
-			import msvcrt as inputDisable
-		else: 
-			import getch as inputDisable
-
-	def __call__(self): 
-		pass
-
+def fatal(message, source="MAIN"):
+	log("FATAL", message, source, color=FATAL_COLOR)
 
 #>>-----------COMMANDS-----------------<<
-
 #Revoir le format d'enregistrement des commandes
+#Non-tester -> ne pas utiliser
+
 class Commands:
 	def __init__(self, function , usage, argument=None) -> None:
 		self.function = function
@@ -133,38 +126,33 @@ command_help = Commands(f_help, "Lorem ipsum")
 #>>-----------HANDLER------------------<<
 
 class CmdHandler:
-	def __init__(self, cmd_list, source) -> None:
+	def __init__(self, cmd_list , source : str, debug : bool = False ) -> None:
 		self.cmd_list = cmd_list
 		self.source = source
 		self.format = ""
-
-	def log(self, level, content, source):
-		now = datetime.datetime.now()
-		hour = '{:02d}'.format(now.hour)
-		minute = '{:02d}'.format(now.minute)
-		second = '{:02d}'.format(now.second)
-		print(f'\r[{hour}:{minute}:{second}][{str(source)}/{level}] {str(content)}')
+		self.isDebug = debug
 
 	def debug(self, message):
-		log("DEBUG", message, self.source)
+		if self.isDebug :
+			debug(message, self.source)
 
 	def info(self, message):
-		log("INFO", message, self.source)
+		info(message, self.source)
 
 	def warn(self, message):
-		log("WARN", message, self.source)
+		warn(message, self.source)
 
 	def error(self, message):
-		log("ERROR", message, self.source)
+		error(message, self.source)
 
 	def fatal(self, message):
-		log("FATAL", message, self.source)
+		fatal(message, self.source)
 
 	def handle_input(self):
 		cmd_input = getline()
 		if not cmd_input[0] in self.cmd_list:
 			self.warn("Unrecognized commands")
-			if "HELP" in self.cmd_list: self.cmd_list["HELP"][0]()
+			if "help" in self.cmd_list: self.cmd_list["help"][0]()
 			return
 		# cmd_list[x][1] represent quantity of arguments needed where -1 is infinite
 		if self.cmd_list[cmd_input[0]][1] != -1:
