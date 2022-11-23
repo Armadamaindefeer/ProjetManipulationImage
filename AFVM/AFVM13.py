@@ -12,7 +12,7 @@ for y in range(hauteur_image):
 		
 		norme = 40 * 40
 		if norme > valeur_seuil:
-			img2.putpixel...
+			img2.putpixel
 		else:
-			img2.putpixel...
+			img2.putpixel
 img2.show()
