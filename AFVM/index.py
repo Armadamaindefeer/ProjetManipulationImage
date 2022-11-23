@@ -52,6 +52,6 @@ f_list = {
 "stegano"		: [stegano,-1,2,"stegano (file_path_1) (file_path_2)"],
 "defaire"		: [defaire,-1,1,"usage"],
 "help"			: [f_help,-1,1,"help (fonction)"],
-"exit"			: []
+"exit"			: [f_exit,-1,1,"usage"]
 
 }
