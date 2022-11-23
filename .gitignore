@@ -3,3 +3,7 @@ AFVM/__pycache__/
 lib/cmdUtils/__pycache__/
 #Ignore .vscode directory
 .vscode/
+#Ignore afvm archive
+AFVM-ARCHIVE
+#Ignore output dir
+output/*

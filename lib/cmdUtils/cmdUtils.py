@@ -46,11 +46,11 @@ cmd_list_exemple = {
 #>>-----------Utils------------------<<
 
 def validate(output):
-	log("WARN", output, "MAIN", "")
+	log("WARN", output, "MAIN", color=WARN_COLOR,pend="" )
 	answer = input(' [Y/n]\n')
 	return answer == 'Y' or answer == 'y' or answer == 'o' or answer == 'O' or answer == ""
 
-def log(level, content, source,color=RESET_COLOR,pend='\n'):
+def log(level, content, source,color="",pend='\n'):
 	now = datetime.datetime.now()
 	hour = '{:02d}'.format(now.hour)
 	minute = '{:02d}'.format(now.minute)
@@ -177,3 +177,4 @@ class CmdHandler:
 		if not cmd_input[0] in self.cmd_list:
 			self.warn("Unrecognized commands")
 			return
+			
