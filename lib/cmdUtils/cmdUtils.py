@@ -2,6 +2,7 @@
 # -*- coding: UTF-8 -*-
 # cmdUtils made by Simon Poulet-Alligand
 # Version de développement impliquand fonction non-utilisable
+# All rights reserved
 
 #>>-----------Import----------------<<
 
@@ -149,7 +150,9 @@ class CmdHandler:
 		fatal(message, self.source)
 
 	def handle_input(self):
+		self.debug("Traitement de l'input utilisateur")
 		cmd_input = getline()
+		self.debug(str(cmd_input))
 		if not cmd_input[0] in self.cmd_list:
 			self.warn("Unrecognized commands")
 			if "help" in self.cmd_list: self.cmd_list["help"][0]()
@@ -170,6 +173,7 @@ class CmdHandler:
 				print(self.cmd_list[cmd_input[0]][-1])
 				return
 		# cmd_list[x][0] represent function pointer
+		self.debug("Launching command...")
 		self.cmd_list[cmd_input[0]][0](*cmd_input[1:])
 
 	def __futur_handle_input(self):

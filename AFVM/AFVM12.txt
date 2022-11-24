@@ -1,5 +1,0 @@
-Pour le carré rouge, 42-192 = -150 -> 22500
-                     49-153 = -104 -> 10816
-Pour le carré jaune, 190-131 = 59 ->  3481
-
-Le carré rouge semble être un contour

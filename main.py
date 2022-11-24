@@ -4,14 +4,14 @@
 import AFVM.index
 import lib.cmdUtils.cmdUtils as cutils
 
+
 def main():
 	log = cutils.CmdHandler(AFVM.index.f_list, "MAIN")
-	#log.isDebug = True # uncomment to toggle debug
-	log.debug("Teste")
-	log.info("Teste info")
-	log.error("Teste ERror")
-	log.warn("Teste WArn")
-	log.fatal("Teste Fatal")
+	# uncomment to toggle debug
+	#log.isDebug = True 
+	log.info("Bienvenu dans le programme de manipulation d'image")
+	log.info("Pour connaitre la liste des commandes disponibles, ecrivez \"help\" puis ENTRÉE")
+	log.info("Pour plus d'info, veuilliez lire le fichier README.txt")
 	running = True
 	while running:
 		try:
